@@ -1,0 +1,24 @@
+{
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "guest_os_type": "Debian_64",
+
+      "iso_url": "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.1.0-amd64-netinst.iso",
+      "iso_checksum": "7915fdb77a0c2623b4481fc5f0a8052330defe1cde1e0834ff233818dc6f301e",
+      "iso_checksum_type": "sha256",
+
+      "ssh_username": "root",
+
+      "guest_additions_mode": "attach",
+
+      "vm_name": "packer-buster-base",
+
+      "shutdown_command": "echo 'packer' | sudo -S shutdown -P now"
+    }
+  ],
+
+  "variables": {
+    "home": "{{env `HOME`}}"
+  }
+}
