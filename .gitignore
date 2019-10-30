@@ -1,2 +1,7 @@
+## Packer Directories
+
+# Cache objects
 packer_cache/
+
+# Final output directory
 output-*/
