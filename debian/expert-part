@@ -1,0 +1,65 @@
+## Expert recipe taken from: https://secopsmonkey.com/custom-partioning-using-preseed.html
+
+# Wipe out everything that already exists
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+d-i partman-auto/method string lvm
+d-i partman-lvm/device_remove_lvm boolean true
+d-i partman-lvm/confirm boolean true
+d-i partman-lvm/confirm_nooverwrite boolean true
+d-i partman-auto-lvm/new_vg_name string system
+d-i partman-md/device_remove_md boolean true
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/default_filesystem string ext4
+
+#d-i partman-auto/choose_recipe select multi-cnx
+
+d-i partman-auto/expert_recipe string     \
+  multi-cnx ::                            \
+    128 512 256 ext2                      \
+    \$defaultignore{ }                    \
+    method{ format }                      \
+    format{ }                             \
+    use_filesystem{ }                     \
+    filesystem{ ext2 }                    \
+    mountpoint{ /boot }                   \
+    .                                     \
+    4000 800 8000  \$default_filesystem   \
+    \$lvmok{ }                            \
+    method{ format }                      \
+    format{ }                             \
+    use_filesystem{ }                     \
+    \$default_filesystem{ }               \
+    mountpoint{ / }                       \
+    .                                     \
+    2000 1500 4000 \$default_filesystem   \
+    \$lvmok{ }                            \
+    method{ format }                      \
+    format{ }                             \
+    use_filesystem{ }                     \
+    \$default_filesystem{ }               \
+    mountpoint{ /var }                    \
+    .                                     \
+    96 512 200% linux-swap                \
+    \$lvmok{ }                            \
+    \$reusemethod{ }                      \
+    method{ swap }                        \
+    format{ }                             \
+    .                                     \
+    1000 300 2000 \$default_filesystem    \
+    \$lvmok{ }                            \
+    method{ format }                      \
+    format{ }                             \
+    use_filesystem{ }                     \
+    \$default_filesystem{ }               \
+    mountpoint{ /tmp }                    \
+    .                                     \
+    1000 3000 8000 \$default_filesystem   \
+    \$lvmok{ }                            \
+    method{ format }                      \
+    format{ }                             \
+    use_filesystem{ }                     \
+    \$default_filesystem{ }               \
+    mountpoint{ /home }                   \
+    .
