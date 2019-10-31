@@ -2,7 +2,7 @@
     "builders": [
         {
             "type": "virtualbox-iso",
-            "format": "ovf",
+            "format": "ova",
             "guest_os_type": "Debian_64",
             "guest_additions_mode": "disable",
             "iso_url": "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.1.0-amd64-netinst.iso",
@@ -10,7 +10,7 @@
             "iso_checksum_type": "sha256",
 
             "vm_name": "debian-base-10.1-amd64",
-            "disk_size": 4000,
+            "disk_size": 32768,
             "hard_drive_interface": "sata",
             "hard_drive_discard": true,
             "hard_drive_nonrotational": true,
@@ -44,9 +44,9 @@
             "shutdown_command": "echo 'debian' | sudo -S systemctl poweroff",
 
             "vboxmanage": [
-                ["modifyvm", "{{.Name}}", "--memory", 1048],
+                ["modifyvm", "{{.Name}}", "--memory", 2048],
                 ["modifyvm", "{{.Name}}", "--cpus", 2],
-                ["setextradata", "{{.Name}}", "GUI/ScaleFactor", 2.5]
+                ["setextradata", "{{.Name}}", "GUI/ScaleFactor", 2]
     		]
         }
     ],
