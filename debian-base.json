@@ -55,7 +55,7 @@
     		]
         },
         {
-            "vm_name": "debian-10.1-kvm-amd64-base",
+            "vm_name": "debian-{{ user `os_version` }}-kvm-amd64-base",
             "type": "qemu",
             "format": "qcow2",
             "accelerator": "kvm",
@@ -71,7 +71,7 @@
 
             "cpus": "{{ user `cpus` }}",
             "memory": "{{ user `memory` }}",
-            "net_device": "virtio-net-pci",
+            "net_device": "virtio",
 
             "headless": true,
             "vnc_bind_address": "0.0.0.0",
@@ -80,22 +80,21 @@
             "boot_wait": "20s",
             "boot_command": [
                 "<esc><wait>",
-                "install ",
-                "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
-                "debian-installer=en_US.UTF-8 ",
-                "auto ",
-                "locale=en_US.UTF-8 ",
-                "kbd-chooser/method=us ",
-                "keyboard-configuration/xkb-keymap=us ",
-                "netcfg/get_hostname={{ .Name }} ",
-                "netcfg/get_domain=unconfigured.local ",
-                "fb=false ",
-                "debconf/frontend=noninteractive ",
-                "debconf/priority=critical ",
-                "console-setup/ask_detect=false ",
-                "console-keymaps-at/keymap=us ",
-                "grub-installer/bootdev=/dev/sda ",
-                "<enter><wait>"
+                "install",
+                " auto",
+                " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-{{ user `os_version` }}.cfg",
+                " debian-installer=en_US",
+                " locale=en_US",
+                " keymap=us",
+                " netcfg/get_hostname={{ .Name }}",
+                " netcfg/get_domain=unconfigured.local",
+                " kbd-chooser/method=us",
+                " console-setup/ask_detect=false",
+                " console-keymaps-at/keymap=us",
+                " keyboard-configuration/xkb-keymap=us",
+                " fb=false",
+                " grub-installer/bootdev=/dev/sda",
+                " <enter><wait>"
             ],
 
             "ssh_timeout": "30m",
