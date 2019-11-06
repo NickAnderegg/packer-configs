@@ -61,7 +61,6 @@
             "disk_size": 16384,
             "disk_compression": true,
             "disk_interface": "virtio-scsi",
-            "disk_compression": true,
             "disk_discard": "unmap",
             "disk_detect_zeroes": "on",
 
