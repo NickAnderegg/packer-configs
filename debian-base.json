@@ -1,9 +1,9 @@
 {
     "variables": {
         "os_version": "10",
-        "disk_size": 16384,
-        "memory": 2048,
-        "cpus": 2
+        "disk_size": "16384",
+        "memory": "2048",
+        "cpus": "2"
     },
     "builders": [
         {
