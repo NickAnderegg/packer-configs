@@ -50,18 +50,27 @@
     		]
         },
         {
-            "vm_name": "debian-10.1-qemu-amd64-base",
+            "vm_name": "debian-10.1-kvm-amd64-base",
             "type": "qemu",
             "format": "qcow2",
+            "accelerator": "kvm",
             "iso_url": "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.1.0-amd64-netinst.iso",
             "iso_checksum": "7915fdb77a0c2623b4481fc5f0a8052330defe1cde1e0834ff233818dc6f301e",
             "iso_checksum_type": "sha256",
 
             "disk_size": 16384,
             "disk_compression": true,
-            "headless": true,
-            "cpus": 2,
+            "disk_interface": "virtio-scsi",
+            "disk_compression": true,
+            "disk_discard": "unmap",
+            "disk_detect_zeroes": "on",
+
+            "cpus": 6,
             "memory": 2048,
+            "net_device": "virtio-net-pci",
+
+            "headless": true,
+            "vnc_bind_address": "0.0.0.0",
 
             "http_directory": "./debian",
             "boot_wait": "20s",
