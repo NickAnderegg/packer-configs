@@ -1,7 +1,13 @@
 {
+    "variables": {
+        "os_version": "10",
+        "disk_size": 16384,
+        "memory": 2048,
+        "cpus": 2
+    },
     "builders": [
         {
-            "vm_name": "debian-10.1-vbox-amd64-base",
+            "vm_name": "debian-{{ user `os_version` }}-vbox-amd64-base",
             "type": "virtualbox-iso",
             "format": "ova",
             "guest_os_type": "Debian_64",
@@ -10,31 +16,30 @@
             "iso_checksum": "7915fdb77a0c2623b4481fc5f0a8052330defe1cde1e0834ff233818dc6f301e",
             "iso_checksum_type": "sha256",
 
-            "disk_size": 32768,
+            "disk_size": "{{ user `disk_size` }}",
             "hard_drive_interface": "sata",
             "hard_drive_discard": true,
             "hard_drive_nonrotational": true,
 
-            "http_directory": "./http/debian-10",
+            "http_directory": "./http/debian",
             "boot_wait": "5s",
             "boot_command": [
                 "<esc><wait>",
-                "install ",
-                "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
-                "debian-installer=en_US.UTF-8 ",
-                "auto ",
-                "locale=en_US.UTF-8 ",
-                "kbd-chooser/method=us ",
-                "keyboard-configuration/xkb-keymap=us ",
-                "netcfg/get_hostname={{ .Name }} ",
-                "netcfg/get_domain=unconfigured.local ",
-                "fb=false ",
-                "debconf/frontend=noninteractive ",
-                "debconf/priority=critical ",
-                "console-setup/ask_detect=false ",
-                "console-keymaps-at/keymap=us ",
-                "grub-installer/bootdev=/dev/sda ",
-                "<enter><wait>"
+                "install",
+                " auto",
+                " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-{{ user `os_version` }}.cfg",
+                " debian-installer=en_US",
+                " locale=en_US",
+                " keymap=us",
+                " netcfg/get_hostname={{ .Name }}",
+                " netcfg/get_domain=unconfigured.local",
+                " kbd-chooser/method=us",
+                " console-setup/ask_detect=false",
+                " console-keymaps-at/keymap=us",
+                " keyboard-configuration/xkb-keymap=us",
+                " fb=false",
+                " grub-installer/bootdev=/dev/sda",
+                " <enter><wait>"
             ],
 
             "ssh_timeout": "30m",
@@ -44,8 +49,8 @@
             "shutdown_command": "echo 'debian' | sudo -S systemctl poweroff",
 
             "vboxmanage": [
-                ["modifyvm", "{{.Name}}", "--memory", 2048],
-                ["modifyvm", "{{.Name}}", "--cpus", 2],
+                ["modifyvm", "{{.Name}}", "--memory", "{{ user `memory` }}"],
+                ["modifyvm", "{{.Name}}", "--cpus", "{{ user `cpus` }}"],
                 ["setextradata", "{{.Name}}", "GUI/ScaleFactor", 2]
     		]
         },
@@ -58,20 +63,20 @@
             "iso_checksum": "7915fdb77a0c2623b4481fc5f0a8052330defe1cde1e0834ff233818dc6f301e",
             "iso_checksum_type": "sha256",
 
-            "disk_size": 16384,
+            "disk_size": "{{ user `disk_size` }}",
             "disk_compression": true,
             "disk_interface": "virtio-scsi",
             "disk_discard": "unmap",
             "disk_detect_zeroes": "on",
 
-            "cpus": 6,
-            "memory": 2048,
+            "cpus": "{{ user `cpus` }}",
+            "memory": "{{ user `memory` }}",
             "net_device": "virtio-net-pci",
 
             "headless": true,
             "vnc_bind_address": "0.0.0.0",
 
-            "http_directory": "./http/debian-10",
+            "http_directory": "./http/debian",
             "boot_wait": "20s",
             "boot_command": [
                 "<esc><wait>",
@@ -99,8 +104,5 @@
 
             "shutdown_command": "echo 'debian' | sudo -S systemctl poweroff"
         }
-    ],
-        "variables": {
-            "home": "{{env `HOME`}}"
-    }
+    ]
 }
