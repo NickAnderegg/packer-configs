@@ -51,7 +51,7 @@
             "vboxmanage": [
                 ["modifyvm", "{{.Name}}", "--memory", "{{ user `memory` }}"],
                 ["modifyvm", "{{.Name}}", "--cpus", "{{ user `cpus` }}"],
-                ["setextradata", "{{.Name}}", "GUI/ScaleFactor", 2]
+                ["setextradata", "{{.Name}}", "GUI/ScaleFactor", 3]
     		]
         },
         {
