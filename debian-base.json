@@ -73,7 +73,6 @@
 
             "cpus": "{{ user `cpus` }}",
             "memory": "{{ user `memory` }}",
-            "net_device": "virtio",
 
             "headless": true,
             "vnc_bind_address": "0.0.0.0",
