@@ -1,0 +1,4 @@
+# .gitattributes
+
+# Override syntax highlighting
+*.cfg linguist-language=Shell
