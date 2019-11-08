@@ -2,3 +2,4 @@
 
 # Override syntax highlighting
 *.cfg linguist-language=Shell
+*.cfg gitlab-language=shell
