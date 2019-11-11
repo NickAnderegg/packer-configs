@@ -1,0 +1,50 @@
+boot-root :
+128 512 256 ext4
+        $primary{ } $bootable{ }
+        method{ format } format{ }
+        use_filesystem{ } filesystem{ ext4 }
+        label{ boot }
+        mountpoint{ /boot }
+.
+256 256 -1 ext4
+        $defaultignore{ }
+        method{ lvm }
+        vg_name{ system-vg }
+.
+512 1024 150% linux-swap
+        $lvmok{ } in_vg{ system-vg }
+        lv_name{ swap }
+        method{ swap } format{ }
+.
+1024 6144 24576 btrfs
+        $lvmok{ } in_vg{ system-vg }
+        lv_name{ root }
+        method{ format } format{ }
+        use_filesystem{ } filesystem{ btrfs }
+        label{ root }
+        mountpoint{ / }
+.
+256 1536 4096 ext4
+        $lvmok{ } in_vg{ system-vg }
+        lv_name{ var }
+        method{ format } format{ }
+        use_filesystem{ } filesystem{ ext4 }
+        label{ var }
+        mountpoint{ /var }
+.
+128 512 1024 ext3
+        $lvmok{ } in_vg{ system-vg }
+        lv_name{ tmp }
+        method{ format } format{ }
+        use_filesystem{ } filesystem{ ext3 }
+        label{ tmp }
+        mountpoint{ /tmp }
+.
+1024 8192 -1 btrfs
+        $lvmok{ } in_vg{ system-vg }
+        lv_name{ home }
+        method{ format } format{ }
+        use_filesystem{ } filesystem{ btrfs }
+        label{ home }
+        mountpoint{ /home }
+.
