@@ -1,0 +1,36 @@
+{
+    "variables": {
+        "os_version": "10",
+        "disk_size": "16384",
+        "memory": "2048",
+        "cpus": "2"
+    },
+    "builders": [
+        {
+            "name": "debian{{ user `os_version` }}-vbox-amd64-bare",
+            "vm_name": "debian{{ user `os_version` }}-vbox-amd64-bare",
+            "output_directory": "output/vbox-amd64-bare",
+            "type": "virtualbox-ovf",
+            "format": "ova",
+            "guest_additions_mode": "disable",
+
+            "source_path": "./output/vbox-amd64-seed/debian{{ user `os_version` }}-vbox-amd64-seed.ova",
+            "checksum": "./output/vbox-amd64-seed/debian{{ user `os_version` }}-vbox-amd64-seed.checksum",
+            "checksum_type": "file",
+
+            "boot_wait": "5s",
+
+            "ssh_timeout": "30m",
+            "ssh_username": "packer",
+            "ssh_password": "packer",
+
+            "shutdown_command": "echo 'packer' | sudo -S systemctl poweroff",
+
+            "vboxmanage": [
+                ["modifyvm", "{{.Name}}", "--memory", "{{ user `memory` }}"],
+                ["modifyvm", "{{.Name}}", "--cpus", "{{ user `cpus` }}"],
+                ["setextradata", "{{.Name}}", "GUI/ScaleFactor", 3]
+    		]
+        }
+    ]
+}

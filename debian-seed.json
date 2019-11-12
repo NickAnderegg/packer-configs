@@ -3,13 +3,13 @@
         "os_version": "10",
         "disk_size": "16384",
         "memory": "2048",
-        "cpus": "2",
-        "partman_file": "disk-16G"
+        "cpus": "2"
     },
     "builders": [
         {
-            "vm_name": "debian-{{ user `os_version` }}-vbox-amd64-base",
-            "output_directory": "output-virtualbox",
+            "name": "debian{{ user `os_version` }}-vbox-amd64-seed",
+            "vm_name": "debian{{ user `os_version` }}-vbox-amd64-seed",
+            "output_directory": "output/vbox-amd64-seed",
             "type": "virtualbox-iso",
             "format": "ova",
             "guest_os_type": "Debian_64",
@@ -29,7 +29,7 @@
                 "<esc><wait>",
                 "install",
                 " auto",
-                " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-{{ user `os_version` }}-bare.cfg",
+                " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-{{ user `os_version` }}.cfg",
                 " debian-installer=en_US",
                 " locale=en_US",
                 " keymap=us",
@@ -45,10 +45,10 @@
             ],
 
             "ssh_timeout": "30m",
-            "ssh_username": "debian",
-            "ssh_password": "debian",
+            "ssh_username": "packer",
+            "ssh_password": "packer",
 
-            "shutdown_command": "echo 'debian' | sudo -S systemctl poweroff",
+            "shutdown_command": "echo 'packer' | sudo -S systemctl poweroff",
 
             "vboxmanage": [
                 ["modifyvm", "{{.Name}}", "--memory", "{{ user `memory` }}"],
@@ -57,8 +57,8 @@
     		]
         },
         {
-            "vm_name": "debian-{{ user `os_version` }}-kvm-amd64-base",
-            "output_directory": "output-qemu",
+            "vm_name": "debian-{{ user `os_version` }}-kvm-amd64-seed",
+            "output_directory": "output/kvm-amd64-seed",
             "type": "qemu",
             "format": "qcow2",
             "accelerator": "kvm",
@@ -84,7 +84,7 @@
                 "<esc><wait>",
                 "install",
                 " auto",
-                " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-{{ user `os_version` }}-bare.cfg",
+                " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed-{{ user `os_version` }}.cfg",
                 " debian-installer=en_US",
                 " locale=en_US",
                 " keymap=us",
@@ -100,17 +100,36 @@
             ],
 
             "ssh_timeout": "30m",
-            "ssh_username": "debian",
-            "ssh_password": "debian",
+            "ssh_username": "packer",
+            "ssh_password": "packer",
 
-            "shutdown_command": "echo 'debian' | sudo -S systemctl poweroff"
+            "shutdown_command": "echo 'packer' | sudo -S systemctl poweroff"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [
+                "echo 'packer' | sudo -S /bin/sh -c 'echo \"packer ALL=(ALL) NOPASSWD: ALL\" >> /etc/sudoers.d/packer'",
+                "echo 'packer' | sudo -S chmod 440 /etc/sudoers.d/packer"
+            ]
+        },
+        {
+            "type": "shell",
+            "scripts": [
+                "./scripts/remove-optional.sh",
+                "./scripts/configure-interfaces.sh"
+            ]
         }
     ],
     "post-processors": [
         {
-            "type": "vagrant",
-            "output": "output-vagrant/debian-{{ user `os_version` }}-{{.Provider}}-base.box",
-            "keep_input_artifact": true
+            "type": "checksum",
+            "checksum_types": [
+                "sha256",
+                "sha512"
+            ],
+            "output": "output/vbox-amd64-seed/{{.BuildName}}.checksum"
         }
     ]
 }
