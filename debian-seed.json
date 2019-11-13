@@ -1,7 +1,7 @@
 {
     "variables": {
         "os_version": "10",
-        "disk_size": "16384",
+        "disk_size": "8192",
         "memory": "2048",
         "cpus": "2"
     },

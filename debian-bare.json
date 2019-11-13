@@ -1,7 +1,7 @@
 {
     "variables": {
         "os_version": "10",
-        "disk_size": "16384",
+        "disk_size": "4096",
         "memory": "2048",
         "cpus": "2"
     },
@@ -11,12 +11,13 @@
             "vm_name": "debian{{ user `os_version` }}-vbox-amd64-bare",
             "output_directory": "output/vbox-amd64-bare",
             "type": "virtualbox-ovf",
-            "format": "ova",
+            "format": "ovf",
             "guest_additions_mode": "disable",
 
             "source_path": "./output/vbox-amd64-seed/debian{{ user `os_version` }}-vbox-amd64-seed.ova",
             "checksum": "./output/vbox-amd64-seed/debian{{ user `os_version` }}-vbox-amd64-seed.checksum",
             "checksum_type": "file",
+            "import_opts": "importtovdi",
 
             "boot_wait": "5s",
 
@@ -27,9 +28,12 @@
             "shutdown_command": "echo 'packer' | sudo -S systemctl poweroff",
 
             "vboxmanage": [
+                ["setextradata", "{{.Name}}", "GUI/ScaleFactor", 3],
                 ["modifyvm", "{{.Name}}", "--memory", "{{ user `memory` }}"],
                 ["modifyvm", "{{.Name}}", "--cpus", "{{ user `cpus` }}"],
-                ["setextradata", "{{.Name}}", "GUI/ScaleFactor", 3]
+
+                ["createmedium", "disk", "--filename", "output/vbox-amd64-bare/{{.Name}}-disk002.vdi", "--size", "4096"],
+                ["storageattach", "{{.Name}}", "--storagectl", "SATA Controller", "--port", "2", "--type", "hdd", "--medium", "output/vbox-amd64-bare/{{.Name}}-disk002.vdi"]
     		]
         }
     ]
